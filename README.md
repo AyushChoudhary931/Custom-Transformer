@@ -22,32 +22,42 @@ The project currently focuses on **architecture correctness and clarity**, with 
 
 ## 🧠 Architecture Overview
 
-The Transformer follows the standard Encoder–Decoder design:
+flowchart TD
+    A[Input Text<br/>(Source Sentence)] --> B[Tokenizer]
+    B --> C[Token IDs]
+    C --> D[Input Embedding]
+    D --> E[Positional Encoding]
 
-Input Tokens
-↓
-Input Embedding + Positional Encoding
-↓
-Encoder Stack (N layers)
-├─ Multi-Head Self-Attention
-├─ Add & Layer Normalization
-├─ Feed Forward Network
-└─ Add & Layer Normalization
-↓
-Contextual Encoder Output
-↓
-Decoder Stack (N layers)
-├─ Masked Multi-Head Self-Attention
-├─ Add & Layer Normalization
-├─ Cross-Attention (Encoder–Decoder)
-├─ Add & Layer Normalization
-├─ Feed Forward Network
-└─ Add & Layer Normalization
-↓
-Projection Layer
-↓
-Vocabulary Probabilities
+    E --> F[Encoder Stack]
 
+    subgraph Encoder[Encoder (N Layers)]
+        F1[Multi-Head Self-Attention]
+        F2[Add & Layer Normalization]
+        F3[Feed Forward Network]
+        F4[Add & Layer Normalization]
+
+        F1 --> F2 --> F3 --> F4
+    end
+
+    F --> G[Encoder Output<br/>(Context Representation)]
+
+    G --> H[Decoder Stack]
+
+    subgraph Decoder[Decoder (N Layers)]
+        H1[Masked Multi-Head Self-Attention]
+        H2[Add & Layer Normalization]
+        H3[Cross Attention<br/>(Encoder–Decoder)]
+        H4[Add & Layer Normalization]
+        H5[Feed Forward Network]
+        H6[Add & Layer Normalization]
+
+        H1 --> H2 --> H3 --> H4 --> H5 --> H6
+    end
+
+    H --> I[Decoder Output]
+    I --> J[Linear Projection]
+    J --> K[Softmax]
+    K --> L[Predicted Output Tokens]
 
 ---
 
